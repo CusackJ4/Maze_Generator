@@ -6,7 +6,7 @@ class Window:
         self.height = height
         self.__root = Tk()
         self.__root.title("Filler Title")
-        self.__canvas = Canvas(self.__root, width=width, height=height)
+        self.__canvas = Canvas(self.__root, bg = "white", width=width, height=height)
         self.__canvas.pack(fill=BOTH, expand=True)
         self.__running = False
         self.__root.protocol("WM_DELETE_WINDOW", self.close)
@@ -43,7 +43,7 @@ class Line:
             )
         
 class Cell:
-    def __init__(self, window):
+    def __init__(self, window=None):
         self.has_left_wall = True
         self.has_right_wall = True
         self.has_top_wall = True
@@ -53,20 +53,30 @@ class Cell:
         self.__y1 = -1
         self.__y2 = -1
         self.__win = window
+        self.visited = False
 
     def draw(self, x1, x2, y1, y2):
         self.__x1 = x1
         self.__x2 = x2
         self.__y1 = y1
         self.__y2 = y2
-        if self.has_left_wall:
-            self.__win.draw_line(Line(Point(self.__x1, self.__y1), Point(self.__x1, self.__y2)), "black") # left wall
-        if self.has_right_wall:
-            self.__win.draw_line(Line(Point(self.__x2, self.__y1), Point(self.__x2, self.__y2)), "black") # right wall
-        if self.has_top_wall:
-            self.__win.draw_line(Line(Point(self.__x1, self.__y1), Point(self.__x2, self.__y1)), "black") # tops wall
-        if self.has_bottom_wall:
-            self.__win.draw_line(Line(Point(self.__x1, self.__y2), Point(self.__x2, self.__y2)), "black") # bottom wall
+        if self.__win != None:
+            if self.has_left_wall:
+                self.__win.draw_line(Line(Point(self.__x1, self.__y1), Point(self.__x1, self.__y2)), "black") # left wall
+            else:
+                self.__win.draw_line(Line(Point(self.__x1, self.__y1), Point(self.__x1, self.__y2)), "white") # left wall
+            if self.has_right_wall:
+                self.__win.draw_line(Line(Point(self.__x2, self.__y1), Point(self.__x2, self.__y2)), "black") # right wall
+            else:
+                self.__win.draw_line(Line(Point(self.__x2, self.__y1), Point(self.__x2, self.__y2)), "white") # right wall
+            if self.has_top_wall:
+                self.__win.draw_line(Line(Point(self.__x1, self.__y1), Point(self.__x2, self.__y1)), "black") # top wall
+            else:
+                self.__win.draw_line(Line(Point(self.__x1, self.__y1), Point(self.__x2, self.__y1)), "white") # top wall
+            if self.has_bottom_wall:
+                self.__win.draw_line(Line(Point(self.__x1, self.__y2), Point(self.__x2, self.__y2)), "black") # bottom wall
+            else:
+                self.__win.draw_line(Line(Point(self.__x1, self.__y2), Point(self.__x2, self.__y2)), "white") # bottom wall
 
     def calc_centre(self):
         self.centre_x  = (self.__x1 + self.__x2)/2
@@ -75,6 +85,7 @@ class Cell:
     
     def draw_move(self, to_cell, undo=False):
         colour = "red" if undo == False else "gray"
-        self.__win.draw_line(Line(Point(*self.calc_centre()), Point(*to_cell.calc_centre())), colour) # * is for tuple unpacking
+        if self.__win != None:
+            self.__win.draw_line(Line(Point(*self.calc_centre()), Point(*to_cell.calc_centre())), colour) # * is for tuple unpacking
 
 

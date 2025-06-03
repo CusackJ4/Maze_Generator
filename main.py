@@ -7,8 +7,9 @@ from time import sleep
 
 if __name__ == "__main__":
     win = Window(800, 600)
-    maze_test = Maze(0, 0, 4, 4, 50, 50, win)
+    maze_test = Maze(50, 50, 12, 16, 50, 50, win)
     maze_test._animate()
+    maze_test.solve()
     
     win.wait_for_close()
 
